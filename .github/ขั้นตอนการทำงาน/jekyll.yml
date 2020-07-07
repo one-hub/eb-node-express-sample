@@ -1,0 +1,28 @@
+name: Jekyll site CI- ชื่อ: แคช
+  uses: actions/cache@v2.0.0
+  ด้วย:
+    # รายการของไฟล์ไดเรกทอรีและรูปแบบไวด์การ์ดเพื่อแคชและกู้คืน
+    เส้นทาง: 
+    # คีย์ที่ชัดเจนสำหรับการกู้คืนและบันทึกแคช
+    สำคัญ: 
+    # รายการสั่งของคีย์ที่ใช้สำหรับการกู้คืนแคชหากไม่มีการกดปุ่มสำหรับแคช
+    คืนค่าคีย์: # ตัวเลือก
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the site in the jekyll/builder container
+      run: |
+        docker run \
+        -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
+        jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
